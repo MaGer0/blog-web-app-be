@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Comment extends Model
+class Like extends Model
 {
     use SoftDeletes;
 
@@ -14,8 +14,6 @@ class Comment extends Model
         'id',
         'user_id',
         'post_id',
-        'parent_id',
-        'content'
     ];
 
     public function user(): BelongsTo

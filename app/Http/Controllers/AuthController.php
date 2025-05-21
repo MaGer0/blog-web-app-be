@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use Google_Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -57,6 +58,25 @@ class AuthController extends Controller
             ]);
         }
         return $user->createToken('Blog Web API Access Token')->plainTextToken;
+    }
+
+    public function googleLogin(Request $request)
+    {
+        $clientId = config('services.google.client_id');
+
+        $client = new Google_Client(['client_id' => $clientId]);
+
+        try {
+            $payload = $client->verifyIdToken($request->token_id);
+
+            return response()->json([
+                'message' => $payload
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Invalid ID token'
+            ], 401);
+        }
     }
 
     public function logout(Request $request)

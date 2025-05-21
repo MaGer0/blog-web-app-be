@@ -14,9 +14,15 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name', 50);
-            $table->string('nickname', 20);
+            $table->string('nickname', 20)->nullable();
             $table->string('email')->unique();
-            $table->string('password', 100);
+            $table->string('password', 100)->nullable();
+            $table->string('google_id')->nullable();
+            $table->string('bio')->nullable();
+            $table->string('picture')->nullable();
+            $table->string('pronouns')->nullable();
+            $table->string('location')->nullable();
+            $table->string('github_username')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

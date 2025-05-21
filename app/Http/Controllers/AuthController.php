@@ -52,12 +52,17 @@ class AuthController extends Controller
 
         $user = User::where('email', $validated['email'])->first();
 
+
         if (!$user || !Hash::check($validated['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'Login Gagal'
+                'login failed' => 'Invalid credentials'
             ]);
         }
-        return $user->createToken('Blog Web API Access Token')->plainTextToken;
+
+        return response()->json([
+            'message' => 'login successfully',
+            'token' => $user->createToken('App Token')->plainTextToken
+        ]);
     }
 
     public function googleLogin(Request $request)
@@ -69,12 +74,32 @@ class AuthController extends Controller
         try {
             $payload = $client->verifyIdToken($request->token_id);
 
-            return response()->json([
-                'message' => $payload
-            ]);
+            try {
+                $user = User::updateOrCreate(
+                    [
+                        'email' => $payload['email'],
+                        'google_id' => $payload['sub']
+                    ],
+                    [
+                        'name' => $payload['name'],
+                        'picture' => $payload['picture']
+                    ]
+                );
+
+                return response()->json([
+                    'message' => 'Login Successfully',
+                    'token' => $user->createToken('App Token')->plainTextToken
+                ]);
+            } catch (\Exception $e) {
+                return response()->json([
+                    'message' => 'Login Failed',
+                    'error' => $e->getMessage()
+                ], 401);
+            }
         } catch (\Exception $e) {
             return response()->json([
-                'message' => 'Invalid ID token'
+                'message' => 'Invalid ID token',
+                'error' => $e->getMessage()
             ], 401);
         }
     }

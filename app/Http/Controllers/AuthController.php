@@ -14,16 +14,12 @@ class AuthController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:50',
-            'nickname' => 'required|string|max:20',
             'email' => 'email|required|unique:users,email',
             'password' => 'required|min:8'
         ], [
             'name.required' => 'Name is required',
             'name.string' => 'Name must be a string',
             'name.max' => 'Name must be less than 50 characters',
-            'nickname.required' => 'Nickname is required',
-            'nickname.string' => 'Nickname must be a string',
-            'nickname.max' => 'Nickname must be less than 20 characters',
             'email.unique' => 'This email is already registered',
             'email.email' => 'Invalid email format',
             'email.required' => 'Email is required',

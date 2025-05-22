@@ -20,7 +20,13 @@ class User extends Authenticatable
         'name',
         'nickname',
         'email',
-        'password'
+        'password',
+        'google_id',
+        'bio',
+        'picture',
+        'pronouns',
+        'location',
+        'github_username',
     ];
 
     public function profile(): HasOne

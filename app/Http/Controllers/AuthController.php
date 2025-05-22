@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Google_Client;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -50,12 +51,11 @@ class AuthController extends Controller
             'email.required' => 'Email is required'
         ]);
 
-        $user = User::where('email', $validated['email'])->first();
+        $user = User::where('email', $validated['email'])->firstOrFail();
 
-
-        if (!$user || !Hash::check($validated['password'], $user->password)) {
+        if (!Hash::check($validated['password'], $user->password)) {
             throw ValidationException::withMessages([
-                'login failed' => 'Invalid credentials'
+                'password' => ['Password is incorrect']
             ]);
         }
 

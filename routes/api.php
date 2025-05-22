@@ -9,6 +9,7 @@ Route::post('/login/google', [AuthController::class, 'googleLogin']);
 Route::post('/register', [AuthController::class, 'register']);
 
 Route::post('/forgot-password', [ResetPasswordController::class, 'sendResetLink']);
+Route::post('/reset-password', [ResetPasswordController::class, 'resetPassword']);
 
 Route::middleware(['auth:sanctum'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout']);

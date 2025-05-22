@@ -66,12 +66,16 @@ class AuthController extends Controller
 
     public function googleLogin(Request $request)
     {
+        $validated = $request->validate([
+            'token_id' => 'required'
+        ]);
+
         $clientId = config('services.google.client_id');
 
         $client = new Google_Client(['client_id' => $clientId]);
 
         try {
-            $payload = $client->verifyIdToken($request->token_id);
+            $payload = $client->verifyIdToken($validated['token_id']);
 
             try {
                 $user = User::updateOrCreate(

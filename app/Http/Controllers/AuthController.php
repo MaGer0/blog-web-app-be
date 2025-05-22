@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Google_Client;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -77,10 +76,10 @@ class AuthController extends Controller
             try {
                 $user = User::updateOrCreate(
                     [
-                        'email' => $payload['email'],
-                        'google_id' => $payload['sub']
+                        'email' => $payload['email']
                     ],
                     [
+                        'google_id' => $payload['sub'],
                         'name' => $payload['name'],
                         'picture' => $payload['picture']
                     ]

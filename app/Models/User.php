@@ -4,16 +4,18 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Notifications\ResetPasswordNotification;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class User extends Authenticatable
 {
-    use SoftDeletes, HasApiTokens;
+    use SoftDeletes, HasApiTokens, Notifiable;
 
     protected $fillable = [
         'id',
@@ -28,6 +30,12 @@ class User extends Authenticatable
         'location',
         'github_username',
     ];
+
+    public function sendPasswordResetNotification($token)
+    {
+        // custom reset email notification class 
+        $this->notify(new ResetPasswordNotification($token));
+    }
 
     public function profile(): HasOne
     {
